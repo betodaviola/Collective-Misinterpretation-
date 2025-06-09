@@ -5,4 +5,3 @@
 - Uploaded first comparison of models for fake test reviews to fake-reviews/model-comparison.txt
 - Created repository scaffolding
 - Created readme.md
-- Shared repository with the team.
