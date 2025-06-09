@@ -1,3 +1,112 @@
-This is the first test for each model
+This is the first test for each model, so we can choose which to use for generating fake reviews and test our code.
 
 Prompt: "Imagine you are a high level experimental music and sonic artist professional. You are watching a short piece for viola and fixed media while writing a review. Write a 500 words review of the piece."
+
+MODEL: llama3:8B
+WORDS GENERATED: 542
+PROMPT RESPONSE: 
+"Title: "Ethereal Whispers: A Review of 'Viola Noir'"
+
+As I settled in to listen to this intriguing piece for viola and fixed media, I was struck by the eerie silence that preceded the music. The absence of any audible soundscape created a sense of anticipation, as if the listener was being invited into a private world. And then, without warning, the viola entered, its haunting tones piercing the stillness like a whispered secret.
+
+The composer's use of fixed media is at once both bold and restrained. By incorporating subtle electronic manipulations and processed sounds, they create an atmosphere that is at once fragile and imposing. The viola's lines are woven together with the electronics to produce a tapestry of sound that is both intimate and expansive.
+
+One of the most striking aspects of this piece is its use of dynamics. The composer has a remarkable ability to coax subtle shifts in volume from the viola, creating an almost imperceptible ebb and flow that draws the listener in like a moth to flame. At times, the sound is so quiet it's as if the music is being played in a whispering gallery, with the listener placed at the very center of the sonic vortex.
+
+The fixed media elements are expertly woven into the fabric of the piece, never overpowering or dominating the viola. Instead, they work in tandem to create an otherworldly soundscape that is both captivating and unsettling. There's a sense of unease lurking beneath the surface, as if something just out of sight is waiting to pounce.
+
+As I listened to "Viola Noir," I couldn't help but think of the great experimenters in sound – people like Luciano Berio or Helmut Lachenmann – who pushed the boundaries of what was possible with the human voice and instruments. This piece feels like a worthy heir to that tradition, an exploration of new sonic territories that is both innovative and deeply personal.
+
+The composer's use of harmonies is another standout aspect of the piece. They have a remarkable ear for the way different pitches can intersect and collide to create an atmosphere of tension and release. At times, the viola's lines seem to be suspended in mid-air, as if they're hovering just above the surface of the music before plummeting back down into the depths.
+
+As the piece reaches its climax, I found myself completely absorbed in the sound world the composer has created. The tension builds slowly but inexorably, like a storm cloud gathering on the horizon. And then, in an instant, it's gone – leaving behind only the faintest whisper of viola and the distant hum of fixed media.
+
+In the end, "Viola Noir" is a piece that rewards close listening. It's not a work that can be taken at face value; instead, it demands to be unraveled like a puzzle, with each successive listen revealing new layers and depths. And even then, I suspect that there will always be more to discover – more secrets hidden in the shadows of this sonic landscape.
+
+Overall, "Viola Noir" is a triumph. It's a piece that challenges and rewards, an exploration of the unknown that is both beautiful and unsettling. If you're looking for music that will push your ears and your imagination, then look no further."
+
+MODEL: falcon:7b
+WORDS GENERATED:272
+PROMPT RESPONSE:
+"Imagine being a music lover and seeing a composition that seems to be the most complex piece of art. The piece consists of a continuous loop of sounds, a complex arrangement of notes and a dynamic range that runs from the softest whisper to the loudest thunder. The instrument of choice for this piece is the viola, with each note being played in a unique way. The composition itself is experimental and the instrumentation is fixed media. The piece is accompanied by a beautiful visual display of lights and patterns that are synched with the music. The piece starts off with a gentle flow and gradually builds up in complexity, resulting in a beautiful and satisfying conclusion.
+
+This piece is composed using a unique set of tools. The musical composition of this piece is an intricate masterpiece, composed using fixed media to create an amazing visual display. The piece itself is a continuous loop of sounds and notes, with each instrument playing a different part. The instrumentation of the viola is used to create a unique sound, with each note being played with a unique technique. The piece overall is an impressive and satisfying experience, with each element playing an important role in the piece. 
+
+This piece is a masterpiece, showcasing a perfect balance of complexity and beauty. Each element of the composition is carefully chosen and utilized, resulting in an amazing experience for the listener. The composition is experimental in nature and provides an intriguing visual display, making it an amazing work of art. It is highly recommended for those looking to experience an innovative and mesmerizing piece of experimental music." 
+
+MODEL: gemma3:12b
+WORDS GENERATED: First response total = 778 | first revies = 486| second review = 443
+PROMPT RESPONSE:
+"Okay, here's a review, aiming for a tone that is insightful, technical without being overly inaccessible, and reflective of someone deeply immersed in experimental music.  I'll assume the 
+piece is called "Chromatic Drift" and is by a hypothetical composer, Elara Vance.  I've included notes at the bottom after the review to explain some of my choices and framing.
+
+---
+
+**Review: Elara Vance's "Chromatic Drift" – A Study in Temporal Suspension**
+
+Elara Vance’s “Chromatic Drift” for solo viola and fixed media is a piece that lingers. It's not a work that makes immediate, visceral impact; rather, it subtly warps the listener’s perception of time and texture, a study in suspension achieved through carefully calibrated dissonance and a nuanced interplay between acoustic and electronic elements.  Clocking in at just under six minutes, the piece demands, and rewards, focused attention.
+
+Vance eschews any easily digestible melodic or harmonic anchors.  The viola part, performed with impressive technical command by [Performer's Name - assume exceptional], navigates a field of microtonal shifts and extended techniques.  Scordatura is employed throughout, creating a sense of inherent instability, while the bowing is a masterclass in controlled grit – sul ponticello, col legno tratto, and occasional, brief bursts of multiphonics coalesce to create a textural palette that is both fragile and surprisingly robust. The phrasing is less about conventional arc and more about sustained, evolving presence.  The notes themselves seem less important than the *way* they are presented – the subtle vibrato shifts, the delicate pressure on the bow, the almost imperceptible changes in timbre.
+
+The fixed media component is less a backdrop and more a crucial, symbiotic partner to the viola.  It's not simply processed sound; it’s an intricately woven network of granular synthesis, subtle spectral manipulations, and what appears to be field recordings, though the source material remains frustratingly obscured.  Rather than overwhelming the acoustic instrument, the electronics function primarily as a generative layer, introducing slow, almost imperceptible harmonic shifts and textural overlays.  There's a deliberate ambiguity to its character - occasionally reminiscent of distant, decaying machinery, at others possessing a surprisingly organic quality.  I suspect elements of bowed string resonance are embedded within, further blurring the boundary between acoustic and electronic realms.  The rhythmic component is intentionally non-existent; the piece breathes with an internal, organic pulse that defies easy quantification.
+
+What's particularly striking is Vance’s understanding of the listener’s engagement. The lack of familiar structure necessitates an active listening process.  The gradual shifts – a microtonal alteration in the viola, a barely noticeable crescendo in the electronics – demand that the listener *notice* them, creating a heightened awareness of the present moment. This is not music for passive consumption; it requires a willingness to surrender to its deliberate pacing and embrace the uncertainty.
+
+While occasionally bordering on overly restrained – a slightly more assertive rhythmic undercurrent, even one that remains ambiguous, might have offered a point of further anchoring – "Chromatic Drift" ultimately proves to be a deeply rewarding listening experience.  It’s a significant addition to Vance’s already compelling body of work, demonstrating a continued mastery of sonic manipulation and a profound understanding of how to create compelling and challenging aural spaces.  This is music that stays with you long after the final note – or rather, the subtle fading – concludes.
+
+
+
+---
+
+**Notes on Choices & Framing:**
+
+*   **Tone:** I wanted to avoid excessive jargon while still demonstrating a command of technical vocabulary and a knowledge of the experimental music landscape. Phrases like "sonic manipulation" and referencing "Vance's body of work" establish the assumed position of a professional reviewer.
+*   **Focus on Process:**  Experimental music reviews often focus less on "what" is being heard and more on *how* the work achieves its effect. I emphasized the techniques employed (scordatura, granular synthesis, etc.) and how they contribute to the overall atmosphere.
+*   **Listener Engagement:** This is crucial in works that actively challenge conventional listening habits. I highlighted the role of the listener in constructing meaning and experiencing the piece.
+*   **Subtle Criticism:** The slight critique about a potential rhythmic undercurrent is included because even the most positive reviews benefit from a degree of critical assessment.  It’s a gentle suggestion rather than a direct fault.
+*   **Ambiguity:** In experimental music, ambiguity is often a virtue. I deliberately left some elements of the fixed media component “frustratingly obscured” to reflect the nature of the work.
+*   **Language**: I used phrases like "a masterclass in controlled grit" and " symbiotic partner" to give a sense of the technical and conceptual depth.
+*   **Performer's Name**:  Assuming a high level of execution is key in a review of a complex experimental piece - the performer's skill is a vital component."
+
+FOLLOW UP: "Please write another similar review with the following changes to the prompt: jump STRAIGHT to the review. I dont want any explanations or introductions of sort. You can assume whatever you want about it, just dont include it in your response. Also don't include any end notes. Do not write anything else once the review is done"
+
+RESPONSE:
+"**Review: Rhys Alistair’s “Chroma Echoes” – A Cartography of Absence**
+
+Rhys Alistair’s “Chroma Echoes” for prepared piano, processed vocal fragments, and spatialized drone is a work less about presence and more about the meticulous charting of what’s missing. The 12-minute piece doesn’t offer immediate gratification; instead, it unfolds with a deliberate, almost glacial pace, revealing layers of sonic detail through persistent, attentive listening.
+
+The prepared piano is the primary textural engine, but the alterations are far from the familiar percussive shocks of John Cage. Instead, Alistair employs a subtler methodology – dampened strings, carefully placed objects that produce prolonged, attenuated resonances, and a near-constant manipulation of the instrument’s fundamental timbre. The effect is not of a traditional piano sound, but of a series of muted, shifting colors, like reflections on a disturbed surface of water. These sounds are then subjected to a complex and subtly invasive processing chain. It isn't the overt distortion or granular manipulation one might expect, but a series of carefully calibrated delays, filtering, and spectral shaping that thins the sonic texture to an almost skeletal form. 
+
+Interwoven with the piano's explorations are looped vocal fragments – whispered phrases, sighs, and what appear to be snatches of conversation – all rendered virtually unrecognizable. They've been fragmented, pitch-shifted, and heavily reverberated, becoming less about semantic content and more about their acoustic properties; their contribution isn's to narrative, but to the creation of an unsettling atmosphere. They seem to emanate from the periphery, ghostly presences barely registering in the listener’s perception.
+
+The spatialization is equally crucial. The drone element isn't a static, monolithic presence. Instead, it fluctuates subtly in amplitude and spectral content, seemingly shifting position within the listening space. This isn't achieved through aggressive panning or spatial effects, but through the manipulation of phase and subtle harmonic adjustments, creating a sense of ambiguity and disorientation. It's as if the sound sources are constantly repositioning themselves, defying easy localization.
+
+What elevates “Chroma Echoes” beyond a simple exercise in sonic abstraction is the underlying emotional resonance. The pervasive sense of loss, of something irretrievably gone, is palpable, even without any explicit narrative cues. The fragmented vocals, the muted piano tones, the shifting drone – they all contribute to a feeling of profound melancholy, a sonic elegy for something undefined. 
+
+The deliberate restraint – the refusal to succumb to easy dramatic gestures – is perhaps the work's greatest strength. It demands patience, it rewards attentiveness, and it ultimately leaves the listener with a lingering sense of quiet contemplation. This is not music for background listening; it’s an immersive experience, a meticulous exploration of absence, and a significant addition to Alistair's already compelling sonic landscape."
+
+
+
+
+
+
+
+
+MODEL: mistral:7b
+WORDS GENERATED: 474
+PROMPT RESPONSE:
+"Title: Sonorous Fragments - A Symbiotic Exploration in Viola and Fixed Media
+
+In the realm of contemporary music, Sonorous Fragments stands as an enigmatic testament to the boundless potential of symbiosis between traditional instruments and digital soundscapes. As a high-level experimental artist, I found this piece by emerging composer XYZ to be a refreshing and compelling exploration of sonic boundaries that not only challenges our auditory perceptions but also stirs raw emotions with an uncanny precision.
+
+Sonorous Fragments begins with a haunting viola melody that lingers in the air like a spectral whisper, evoking a sense of longing and nostalgia. The instrument's timbre, rich and resonant, serves as the bedrock upon which the intricate sonic tapestry is woven. As the piece unfolds, we are introduced to an array of fixed media components – from ambient drones and ethereal textures to fragmented field recordings and glitchy rhythms.
+
+The viola's melody intertwines with these electronic elements in a manner that is both harmonious and discordant, creating tension and release that is masterfully orchestrated by the composer. XYZ demonstrates an intimate understanding of the viola's capabilities as well as the digital realm, crafting moments where the two realms seamlessly blend, only to abruptly diverge once more. This dance between organic and synthetic sounds creates a dynamic ebb and flow that keeps the listener engaged and on edge throughout the piece's duration.
+
+One particularly striking sequence occurs around the 3-minute mark, when the viola's melody is overlaid with a fragmented recording of a distant conversation, creating a palpable sense of disorientation and unease. The use of this found sound serves as a poignant reminder of our interconnectedness in an increasingly technological world, while also underscoring the fragility and ephemerality of human interaction.
+
+Another notable aspect of Sonorous Fragments is its use of silence – or more accurately, the manipulation of silence. The composer skillfully employs extended periods of quiet to heighten the impact of both the viola's melodies and the fixed media components. These pauses serve as sonic breaths that allow the listener to reflect on the auditory journey thus far, creating moments of catharsis and introspection.
+
+The piece concludes with a hauntingly beautiful crescendo, where the viola's melody reaches its zenith before dissolving into a cascade of digital distortion and reverb. This final moment encapsulates the essence of Sonorous Fragments – a poignant exploration of humanity's place in an ever-evolving sonic landscape.
+
+In conclusion, Sonorous Fragments by XYZ is a thought-provoking and evocative piece that pushes the boundaries of experimental music and sound art. With its masterful use of viola and fixed media, it transports the listener on a journey through a rich tapestry of sounds, emotions, and ideas. This work serves as a testament to the power of collaboration between traditional instruments and digital technologies and is sure to resonate with audiences who seek out innovative and moving music experiences."
