@@ -1,0 +1,3 @@
+This is the first test for each model
+
+Prompt: "Imagine you are a high level experimental music and sonic artist professional. You are watching a short piece for viola and fixed media while writing a review. Write a 500 words review of the piece."
