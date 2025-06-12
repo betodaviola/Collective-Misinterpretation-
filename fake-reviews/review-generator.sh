@@ -1,11 +1,13 @@
 #!/bin/bash
 
 ###This script generates fake reviews that can be using for testing our piece by simulating a like audience. Please modify the name of the document in the OUTPUT variable below before every use so the previous document is not override 
-
+#dependencies: ollama
+#if the model is not yet installed in your machine, this script will install it the first time it runs
 
 #Variables
 MODEL="deepseek-r1:14b"
-OUTPUT="fake-reviews/balanced-reviews.txt"
+OUTPUT="neutral-reviews.txt"
+BASE_PROMPT=$(<review-prompt.txt)
 
 #now it will ask the user for other variables (easier to change test parameters on the fly)
 echo "How many reviews would you like?"
@@ -41,9 +43,12 @@ NEU_PERCENT=$((POSSIBLE_NEG - NEG_PERCENT))
 
 positive_count=$((TOTAL_COUNT * POS_PERCENT / 100))
 negative_count=$((TOTAL_COUNT * NEG_PERCENT / 100))
-neutral_count=$((TOTAL_COUNT * NEU_PERCENT / 100))
+neutral_count=$((TOTAL_COUNT - positive_count - negative_count)) #Ensures the roundings done by bash do not interfer with the total number of reviews
 
 echo "Generating $positive_count positive, $negative_count negative, and  $neutral_count neutral reviews..."
+
+# Delete contents of output file if it exists, or creates it if it doesn't
+: > "$OUTPUT" 
 
 #define start time to calculate total time for n scripts
 start_time=$(date +%s)
@@ -63,11 +68,14 @@ for i in $(seq 1 $TOTAL_COUNT); do
         ((negative_count--))
     fi
 
-    PROMPT="You are an audience member at a contemporary music concert. While a short piece for viola and fixed media is being executed, you are invited to write a 100 to 300 words review of said piece, describing what you hear. Your description can range from from technical terms (e.g., melody, harmony, timbre, genre, style) to more abstract portrayals (e.g., mood, emotions, feelings), or stick to general impressions. Your review can also include your personal opinion about the piece, which, on this case, is $TONE. Do not mention the title of the piece or any names of the artists involved. Do not include a title or header of any kind to the review and start directly with the content."
+    PROMPT="${BASE_PROMPT//\{\{TONE\}\}/$TONE}"
 
-    echo -e "<review>" >> "$OUTPUT"
-    ollama run $MODEL --hidethinking "$PROMPT" >> "$OUTPUT"
-    echo -e "</review>" >> "$OUTPUT"
+    {
+        echo -e "<review>"
+        ollama run $MODEL --hidethinking "$PROMPT" | sed '${/^$/d;}'
+        echo -e "</review>"
+    } >> "$OUTPUT"
+
 done
 
 
