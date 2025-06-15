@@ -7,7 +7,7 @@
 #Variables
 MODEL="deepseek-r1:14b"
 OUTPUT="neutral-reviews.txt"
-BASE_PROMPT=$(<review-prompt.txt)
+BASE_PROMPT=$(<review-prompt.txt)s
 
 #now it will ask the user for other variables (easier to change test parameters on the fly)
 echo "How many reviews would you like?"
@@ -71,9 +71,9 @@ for i in $(seq 1 $TOTAL_COUNT); do
     PROMPT="${BASE_PROMPT//\{\{TONE\}\}/$TONE}"
 
     {
-        echo -e "<review>"
+        echo -e "<input>"
         ollama run $MODEL --hidethinking "$PROMPT" | sed '${/^$/d;}'
-        echo -e "</review>"
+        echo -e "</input>"
     } >> "$OUTPUT"
 
 done
