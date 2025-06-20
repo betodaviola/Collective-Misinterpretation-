@@ -34,9 +34,10 @@
 - Sometimes, prompted rules are broken by the AI when summarizing too many audience, since the prompt becomes bigger than the context window of the AI. Despite the context being a problem, adding more details to prompt seems to make it better for mistral so I am trying that. A possible hack hack could be to resumarize the first output of the summarize (creating the first output as a temp file). The problem with this hack is that would make using slower and more powerfull models not possible since it would take too long between movements.
 - Luckly, mistral:7b is extremelly fast summarizing. I will start testing other models for that and try to use word cloud as a tool to quicly, visualy compare summarizations of the same database.
 
-## 2025-06-16
+## 2025-06-16 (Roberto)
 - Finally figured out how to make the models follow the rules when summarizing the audience inputs, which is to set the context window environmental variable correctly (details on how to do it on README). I though this was a problem early in the process but messing around with it didn't fix anything because I was using the wrong syntax. 
 - Made the PROMPT variable on review-summarization/summarizer.sh access a file called sum-*n*.txt at summarizing-prompts/, where *n*  can be anything that differenciates one prompt from another. This makes easier to edit and polish more than one prompt at the same time and change them in the script: simply modify the variable name on the top of the script.
 
-## 2025-06-19
+## 2025-06-19 (Roberto)
 - Now that every model is much more competent at summarizing very large amounts of text, I updated our summarizing prompts accordingly, and organized them on directories named after the prompt tested and the context window size.
+- Finished summarizing tests and added results to README.md
