@@ -41,3 +41,6 @@
 ## 2025-06-19 (Roberto)
 - Now that every model is much more competent at summarizing very large amounts of text, I updated our summarizing prompts accordingly, and organized them on directories named after the prompt tested and the context window size.
 - Finished summarizing tests and added results to README.md
+
+## 2025/06/21
+- Started to work on the webform. html/css is ready and seems to look good on smartphones as well but I just started working on the php and that is still not ready.
