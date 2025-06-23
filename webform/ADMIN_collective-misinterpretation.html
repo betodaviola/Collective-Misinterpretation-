@@ -14,10 +14,11 @@
   <body class="gradient">
     <h1>[admin page] Collective Misinterpretation</h1>
     <p>
-      <button class="button" id="openForm">OPEN FORM</button>
-      <button class="button" id="closeForm">CLOSE FORM</button>
-      <button class="button" id="reset">RESET</button>
+      <button class="button" id="openBtn">OPEN FORM</button>
+      <button class="button" id="closedBtn">CLOSE FORM</button>
+      <button class="button" id="resetBtn">RESET</button>
     </p>
+
     <section class="card-normal">
       <h2>Status</h2>
       <p id="formStatus">Form is currently <u id="statusText">closed</u><span id="countSentence"></span>.</p>
@@ -31,11 +32,42 @@
       </div>
     </footer>
     <script>
+      function sendRequest(status) { // this function uses fetch() to send a request to the php via AJAX, so the page is not updated with each request
+        fetch('http://localhost:8000/input_handler.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},// standard header format to simulate a form being sent
+          body: `btnStatus=${status}` //this is the actual data, simulating the previous code onn the button tag
+        }) 
+        .then(response => response.text()) //this is where it gets weird: fectch() returns a Promise (object that gives a result). This result is handled by the .then() block. On this case we are getting the response as text
+        .then(data => {
+          console.log(data); //See what the server responded, but you can add any code here that would use the server response
+        })
+      }
+
+      // Attach click handlers. note that on click, the sendRequest(status)above is executed, using the fetch() in the process
+      document.getElementById('openBtn').addEventListener('click', () => {
+        sendRequest('open');
+      });
+      document.getElementById('closedBtn').addEventListener('click', () => {
+        sendRequest('closed');
+      });
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        sendRequest('reset');
+      });
+
+
+
+
+/*
+
+
+
+
       let mov = 0;
       let countdown = 0;
       let countdownInterval = null;
 
-      const formTime = 5; //Remember to set this appropriatelly based on the length of the movement
+      const formTime = 10; //Remember to set this appropriatelly based on the length of the movement
 
       const formStatus = document.getElementById('formStatus');
       const statusText = document.getElementById('statusText');
@@ -83,7 +115,7 @@
         mov = 0;
         movDisplay.textContent = mov;
         
-      });
+      }); */
 
     </script>
   </body>
