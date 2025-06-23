@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: php-server
+    restart: always
+    working_dir: /var/www/
+    volumes:
+      - ..:/var/www
+  nginx:
+    image: nginx:1.27.5-alpine
+    container_name: programwithgio-nginx
+    restart: always
+    ports: #this is how you can have multiple projects running at the same container. Just add ports for them on here (8001:80 for example)
+      - 8000:80
+    volumes:
+      - ..:/var/www
+      - ./nginx:/etc/nginx/conf.d
