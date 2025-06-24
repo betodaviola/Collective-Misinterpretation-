@@ -1,1 +1,1 @@
-open | 5
+closed | 2

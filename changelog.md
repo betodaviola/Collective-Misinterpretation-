@@ -42,5 +42,9 @@
 - Now that every model is much more competent at summarizing very large amounts of text, I updated our summarizing prompts accordingly, and organized them on directories named after the prompt tested and the context window size.
 - Finished summarizing tests and added results to README.md
 
-## 2025/06/21
+## 2025/06/21 (Roberto)
 - Started to work on the webform. html/css is ready and seems to look good on smartphones as well but I just started working on the php and that is still not ready.
+
+## 2025/06/24 (Roberto)
+- Webform and Admin pages are up and running. Reviews are stored in the correct format at webform/audience-input/input-mov*n*.txt where *n* is the movement related to the input.
+- It is hard to test what would happen with a lot of simultaneous inputs. Next steps might be to upload a version online and create bots to test it both locally and the online version.

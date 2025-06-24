@@ -13,16 +13,107 @@
   </head>
   <body class="gradient">
     <h1>Collective Misinterpretation</h1>
-      <p>Describe the musical sounds you hear.</p>
+      <p>Describe the musical sounds you hear on each movement.</p>
       <p>You can use technical terms (e.g., melody, harmony, timbre, genre, style), abstract ideas (e.g., mood, emotions, feelings), or general impressions. You will have approximately one minute after the start of each movement to write your description before it is automatically submitted.</p>
-      <form action="http://localhost:8000/" method="post">
-          <p><textarea name="mov_description" placeholder="type your description here" spellcheck="true" rows="7" required></textarea></p>
-          <p><button class="button" type="submit">SUBMIT</button></p>
+      <p>After one minute, the form will be deactivated, and only made active again at the onset of a new movement.</p>
+      <p>You have <u><span id="counter">0</span> seconds</u> until automatic submission.</p>
+      <form id="movementForm" action="/input_handler.php" method="post">
+          <p><textarea id="movementInput" name="mov_description" placeholder="type your description here" spellcheck="true" rows="7" disabled></textarea></p>
+          <!-- Activate if you need manual submission, although IT WILL REFRESH THE PAGE: -->
+          <!-- <p><button class="button" type="submit">SUBMIT</button></p>-->
       </form>
     <footer>
       <div class="fa-wrapper">
         <a href="https://github.com/betodaviola?tab=repositories" title="GitHub Repositories" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i></a>
       </div>
     </footer>
+    <script>
+      let countdown = 10;           // Countdown starting value. NEEDS TO BE SET before the piece runs
+      let countdownInterval = null;
+
+      let formEnabled = null;
+
+      const countdownDisplay = document.getElementById('counter');
+      const movementForm = document.getElementById('movementForm');
+      const movementInput = document.getElementById('movementInput');
+
+      //check formStatus.txt every 2 seconds and enable/disable form
+      async function checkFormStatus() { //asynnc means it returs a promise (useful for online requests as a promisse can be pending/fulfilled(resolved)/rejected
+        try { 
+          const response = await fetch(`/formStatus.txt?t=${Date.now()}`, { //await is only used inside async. it pauses this function untill promise resolves or fails. On this case it waits until fetch responds
+            //the date now above makes every request unique by using very long number in milisseconds, making sure there is not cashed information for this regardless of browses
+            cache: 'no-store',
+            headers: {
+              'Cache-Control': 'no-cache'
+            }
+          });
+          const status = await response.text(); //waits untill text is extracted
+          if (status.startsWith('open')) {
+            enableForm();
+          } else if (status.startsWith('closed')) {
+            await disableForm(); //waits untill the disableForm() is fully finished
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function enableForm() {
+        if (formEnabled === false) { //avoids it trying to run every 2 seconds and fixed countdown (does not run ir form already open)
+          formEnabled = true;
+          document.getElementById("movementForm").reset();
+          //countdown stuff. found it online and need to actually learn some of these methods 
+          if (countdownInterval) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+          }
+          countdown = 10;
+          countdownInterval = setInterval(() => {
+            countdown--;
+            countdownDisplay.textContent = countdown; //show countdown to user
+          }, 1000);
+        } else {
+          exit;
+        }
+        movementInput.disabled = false; //actually activates the form
+      }
+
+      async function disableForm() { //async. notice await in the try/catch blkock below
+        formEnabled = false;
+        if (!movementInput.value.trim()) { //trim removes spaces at begining and end. If theres no actyual input, it will return empty and and thenrun this block
+          // If there is mo input to send, just reset. Dont send empty form input to the file
+          movementInput.disabled = true;
+          countdownDisplay.textContent = '0';
+          if (countdownInterval) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+          }
+          return;
+        }
+        // Now, this will; run if form is not empty when it deactivates:
+        const formData = new FormData(movementForm); // grabs the information on the form (movementForm is the id)
+        try {
+          const response = await fetch("/input_handler.php", { //this block sends the data in the form to the php server 
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.text(); //REMEMBER THAT fetch() AWAYS RETURNS A RESPONSE
+          console.log(data);
+        } catch (error) {
+          console.error(error);
+        } finally { //this aways runs at the end regardles of results and errors in the try/catch
+          movementInput.disabled = true; //deactivates form
+          countdownDisplay.textContent = '0';
+          if (countdownInterval) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+          }
+        }
+      }
+
+      setInterval(checkFormStatus, 2000); //poll every 2 seconds
+      checkFormStatus(); //poll immediately when page loads regardless of setInterval()
+    </script>
+
   </body>
 </html>

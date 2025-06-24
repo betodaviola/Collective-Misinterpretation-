@@ -13,6 +13,7 @@
   </head>
   <body class="gradient">
     <h1>[admin page] Collective Misinterpretation</h1>
+    <p>PLEASE RESET BEFORE EVERY RUN!</p>
     <p>
       <button class="button" id="openBtn">OPEN FORM</button>
       <button class="button" id="closedBtn">CLOSE FORM</button>
@@ -32,18 +33,52 @@
       </div>
     </footer>
     <script>
-      function sendRequest(status) { // this function uses fetch() to send a request to the php via AJAX, so the page is not updated with each request
-        fetch('http://localhost:8000/input_handler.php', {
+      let status = "closed";
+      let mov = "0";
+
+      let countdown = 0;
+      let countdownInterval = null;
+      const formTime = 10; //Remember to set this appropriatelly based on the length of the movement
+
+      function sendRequest(status) { // this function uses fetch() to send a request to the php via AJAX, so the page is not refreshed with each request
+        fetch('/input_handler.php', {
           method: 'POST',
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},// standard header format to simulate a form being sent
           body: `btnStatus=${status}` //this is the actual data, simulating the previous code onn the button tag
         }) 
         .then(response => response.text()) //this is where it gets weird: fectch() returns a Promise (object that gives a result). This result is handled by the .then() block. On this case we are getting the response as text
-        .then(data => {
-          console.log(data); //See what the server responded, but you can add any code here that would use the server response
+        .then(statusData => {
+        //  console.log(statusData); //See what the server responded, but you can add any code here that would use the server response
+
+          let statusArray = statusData.split(" | ");
+          let status = statusArray[0];
+          let mov = statusArray[1];
+
+          const formStatus = document.getElementById('formStatus');
+          const statusText = document.getElementById('statusText');
+          const movDisplay = document.getElementById('movDisplay');
+          const countSentence = document.getElementById('countSentence');
+
+          movDisplay.textContent = mov;
+
+          if (status == "open") {
+            countdown = formTime;
+            statusText.textContent = 'active';
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+              countdown--;
+              countSentence.textContent = ' for ' + countdown + ' more seconds';
+              if (countdown <= 0) {
+                sendRequest('closed');
+              }
+            }, 1000);
+          } else {
+            clearInterval(countdownInterval);
+            statusText.textContent = 'closed';
+            countSentence.textContent = '';
+          }
         })
       }
-
       // Attach click handlers. note that on click, the sendRequest(status)above is executed, using the fetch() in the process
       document.getElementById('openBtn').addEventListener('click', () => {
         sendRequest('open');
@@ -54,69 +89,6 @@
       document.getElementById('resetBtn').addEventListener('click', () => {
         sendRequest('reset');
       });
-
-
-
-
-/*
-
-
-
-
-      let mov = 0;
-      let countdown = 0;
-      let countdownInterval = null;
-
-      const formTime = 10; //Remember to set this appropriatelly based on the length of the movement
-
-      const formStatus = document.getElementById('formStatus');
-      const statusText = document.getElementById('statusText');
-      const movDisplay = document.getElementById('movDisplay');
-      const countSentence = document.getElementById('countSentence');
-
-
-
-      document.getElementById('openForm').addEventListener('click', () => {
-        mov++;
-        movDisplay.textContent = mov;
-        countdown = formTime;
-        statusText.textContent = 'active';
-
-        // Reset and start countdown (e.g., 10 seconds)
-
-
-        
-        // Clear any existing countdown. remember this variable is null
-        clearInterval(countdownInterval);
-
-        // Start new countdown
-        countdownInterval = setInterval(() => {
-          countdown--;
-
-          countSentence.textContent = ' for ' + countdown + ' more seconds';
-
-
-          if (countdown <= 0) {
-            clearInterval(countdownInterval);
-            statusText.textContent = 'closed';
-            countSentence.textContent = '';
-          }
-        }, 1000);
-      });
-      document.getElementById('closeForm').addEventListener('click', () => {
-        clearInterval(countdownInterval);
-        statusText.textContent = 'closed';
-        countSentence.textContent = '';
-      });
-      document.getElementById('reset').addEventListener('click', () => {
-        clearInterval(countdownInterval);
-        statusText.textContent = 'closed';
-        countSentence.textContent = '';
-        mov = 0;
-        movDisplay.textContent = mov;
-        
-      }); */
-
     </script>
   </body>
 </html>
