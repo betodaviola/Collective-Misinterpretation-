@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Roberto Mochetti">
     <meta name="description" content="Roberto Mochetti is a viola player, teacher, arranger, and composer. Passionate about experimental and chamber music, he has played, studied, and taught in Brazil, the United States, and in Denmark. Today, Roberto is working on his Doctor of Musical Arts degree at LSU, focusing on viola performance with a minor in experimental music and digital media.">
-    <title>ADMIN - Collective Misinterpretation</title>
+    <title>adminPage - Collective Misinterpretation</title>
 
-    <link rel="stylesheet" type="text/css" href="normalize.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <script src="https://kit.fontawesome.com/913023e2fb.js" crossorigin="anonymous"></script>
   </head>
   <body class="gradient">
@@ -41,7 +41,7 @@
       const formTime = 10; //Remember to set this appropriatelly based on the length of the movement
 
       function sendRequest(status) { // this function uses fetch() to send a request to the php via AJAX, so the page is not refreshed with each request
-        fetch('/input_handler.php', {
+        fetch('./../input_handler.php', {
           method: 'POST',
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},// standard header format to simulate a form being sent
           body: `btnStatus=${status}` //this is the actual data, simulating the previous code onn the button tag

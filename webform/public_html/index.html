@@ -28,10 +28,14 @@
       </div>
     </footer>
     <script>
-      let countdown = 10;           // Countdown starting value. NEEDS TO BE SET before the piece runs
+      const formTime = 10;  // Countdown starting value. NEEDS TO BE SET before the piece runs
+
+      let countdown = formTime;          
       let countdownInterval = null;
 
       let formEnabled = null;
+
+      
 
       const countdownDisplay = document.getElementById('counter');
       const movementForm = document.getElementById('movementForm');
@@ -40,16 +44,20 @@
       //check formStatus.txt every 2 seconds and enable/disable form
       async function checkFormStatus() { //asynnc means it returs a promise (useful for online requests as a promisse can be pending/fulfilled(resolved)/rejected
         try { 
-          const response = await fetch(`/formStatus.txt?t=${Date.now()}`, { //await is only used inside async. it pauses this function untill promise resolves or fails. On this case it waits until fetch responds
+          const response = await fetch(`status.php?t=${Date.now()}`, { //await is only used inside async. it pauses this function untill promise resolves or fails. On this case it waits until fetch responds
             //the date now above makes every request unique by using very long number in milisseconds, making sure there is not cashed information for this regardless of browses
             cache: 'no-store',
             headers: {
               'Cache-Control': 'no-cache'
             }
           });
+          console.log("checking status");
           const status = await response.text(); //waits untill text is extracted
           if (status.startsWith('open')) {
+            console.log(`raw status: "${status}"`);
+            console.log("status changed");
             enableForm();
+            console.log("status changed");
           } else if (status.startsWith('closed')) {
             await disableForm(); //waits untill the disableForm() is fully finished
           }
@@ -59,7 +67,7 @@
       }
 
       function enableForm() {
-        if (formEnabled === false) { //avoids it trying to run every 2 seconds and fixed countdown (does not run ir form already open)
+        if (formEnabled === false) { //avoids it trying to run every 2 seconds and fixed countdown (does not run if form already open)
           formEnabled = true;
           document.getElementById("movementForm").reset();
           //countdown stuff. found it online and need to actually learn some of these methods 
@@ -67,7 +75,7 @@
             clearInterval(countdownInterval);
             countdownInterval = null;
           }
-          countdown = 10;
+          countdown = formTime;
           countdownInterval = setInterval(() => {
             countdown--;
             countdownDisplay.textContent = countdown; //show countdown to user
@@ -93,7 +101,7 @@
         // Now, this will; run if form is not empty when it deactivates:
         const formData = new FormData(movementForm); // grabs the information on the form (movementForm is the id)
         try {
-          const response = await fetch("/input_handler.php", { //this block sends the data in the form to the php server 
+          const response = await fetch("./input_handler.php", { //this block sends the data in the form to the php server 
             method: "POST",
             body: formData,
           });
