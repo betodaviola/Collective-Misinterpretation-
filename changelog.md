@@ -48,3 +48,7 @@
 ## 2025/06/24 (Roberto)
 - Webform and Admin pages are up and running. Reviews are stored in the correct format at webform/audience-input/input-mov*n*.txt where *n* is the movement related to the input.
 - It is hard to test what would happen with a lot of simultaneous inputs. Next steps might be to upload a version online and create bots to test it both locally and the online version. 
+
+## 2025/06/28 (Roberto)
+- Optimized the form pages and infraestructure a lot and got rid of bugs.
+- Created first version of watchdog script. The requests easily overwhelm the php code and make the form pages useless. Fortunately, I think the problem is how the code is organized and php handled so I will redo everything trying to merge my html with more broken down php codes spread out through it so the requests are not all going to the same place.

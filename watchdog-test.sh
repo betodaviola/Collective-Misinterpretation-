@@ -1,19 +1,31 @@
 #!/usr/bin/env bash
 #Dependencies: jq
 url="http://localhost:8000/input_handler.php"
-download_dir="/mnt/storage/Stuff/tux_bkp/GitProjects/colectiveMisinterpretation/local-inputs"
+download_dir="local-inputs"
 
-# Get JSON listing
-files=$(curl -s -X POST -d "btnStatus=closed" "$url" | jq -r '.[]')
-for f in $files; do
-    filename=$(basename "$f")
-    if [ ! -f "$download_dir/$filename" ]; then
-        echo "Downloading $filename..."
-        curl -o "$download_dir/$filename" "http://localhost:8000/audience-input/$f"
+function watchdog() {
+    echo "Waiting for new input files..."
 
-        # Here you can call another script for processing:
-        # ./process_file.sh "$download_dir/$filename"
-    else
-        echo "Already have $filename"
-    fi
-done
+    while true; do
+        # Get JSON listing
+        files=$(curl -s -X POST -d "btnStatus=closed" "$url" | jq -r '.[]') ###THIS LINE IS DIFFERENT IN WIN
+        for f in $files; do
+            filename=$(basename "$f")
+            if [ ! -f "$download_dir/$filename" ]; then
+                echo "Downloading $filename..."
+                curl -o "$download_dir/$filename" "http://localhost:8000/data/audience-input/$filename"
+
+                break
+                # Here you can call another script for processing:
+                # ./process_file.sh "$download_dir/$filename"
+            else
+                echo "No new files available"
+                sleep 1
+            fi
+        done
+    done
+}
+
+watchdog
+echo "DONE"
+

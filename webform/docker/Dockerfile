@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     zip \
     unzip \
+    jq \
     && rm -rf /var/lib/apt/lists/*  
 # last line removes files left behing in the system
     

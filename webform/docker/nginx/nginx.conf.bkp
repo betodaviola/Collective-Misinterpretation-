@@ -19,11 +19,8 @@ server {
  #       fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
-    location /admin/ {
-        try_files $uri $uri/ =404;
-    }
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ /index.html?$query_string;
         gzip_static on;
     }
 }
