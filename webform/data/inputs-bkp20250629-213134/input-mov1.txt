@@ -1,0 +1,3 @@
+<input>
+quando reseta, ele desativa???
+</input>

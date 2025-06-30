@@ -17,7 +17,9 @@
       <p>You can use technical terms (e.g., melody, harmony, timbre, genre, style), abstract ideas (e.g., mood, emotions, feelings), or general impressions. You will have approximately one minute after the start of each movement to write your description before it is automatically submitted.</p>
       <p>After one minute, the form will be deactivated, and only made active again at the onset of a new movement.</p>
       <p>You have <u><span id="counter">0</span> seconds</u> until automatic submission.</p>
-      <form id="movementForm" action="/input_handler.php" method="post">
+      
+      <!-- handle audience live descriptions-->
+      <form id="movementForm" method="post">
           <p><textarea id="movementInput" name="mov_description" placeholder="type your description here" spellcheck="true" rows="7" disabled></textarea></p>
           <!-- Activate if you need manual submission, although IT WILL REFRESH THE PAGE: -->
           <!-- <p><button class="button" type="submit">SUBMIT</button></p>-->
@@ -51,15 +53,13 @@
               'Cache-Control': 'no-cache'
             }
           });
-          console.log("checking status");
+
           const status = await response.text(); //waits untill text is extracted
+
           if (status.startsWith('open')) {
-            console.log(`raw status: "${status}"`);
-            console.log("status changed");
             enableForm();
-            console.log("status changed");
           } else if (status.startsWith('closed')) {
-            await disableForm(); //waits untill the disableForm() is fully finished
+            await disableForm();
           }
         } catch (error) {
           console.error(error);
@@ -80,8 +80,8 @@
             countdown--;
             countdownDisplay.textContent = countdown; //show countdown to user
           }, 1000);
-        } else {
-          exit;
+//        } else {
+//          exit;
         }
         movementInput.disabled = false; //actually activates the form
       }
@@ -101,7 +101,7 @@
         // Now, this will; run if form is not empty when it deactivates:
         const formData = new FormData(movementForm); // grabs the information on the form (movementForm is the id)
         try {
-          const response = await fetch("./input_handler.php", { //this block sends the data in the form to the php server 
+          const response = await fetch('submit.php', { //this block sends the data in the form to the php server 
             method: "POST",
             body: formData,
           });

@@ -1,3 +1,0 @@
-<input>
-vo fecha
-</input>

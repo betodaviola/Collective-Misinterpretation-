@@ -1,3 +1,0 @@
-<input>
-numero do axar einnnn
-</input>

@@ -42,16 +42,19 @@
       const formTime = 10; //Remember to set this appropriatelly based on the length of the movement
 
       function sendRequest(action) { // this function uses fetch() to send a request to the php via AJAX, so the page is not refreshed with each request
-        fetch('./../input_handler.php', {
+        fetch('form-handler.php', {
           method: 'POST',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},// standard header format to simulate a form being sent
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+ //           'Accept': 'text/plain' //important for running these buttons on the same page
+          },// standard header format to simulate a form being sent
           body: `btnStatus=${action}` //this is the actual data, simulating the previous code onn the button tag
         }) 
         .then(response => response.text()) //this is where it gets weird: fectch() returns a Promise (object that gives a result). This result is handled by the .then() block. On this case we are getting the response as text
         .then(data => {
           console.log(data); //See what the server responded, but you can add any code here that would use the server response
 
-          const [serverStatus, serverMov] = data.split(" | ");
+          const [serverStatus, serverMov] = data.trim().split(" | ");
           mov = serverMov;
           document.getElementById('movDisplay').textContent = mov;
 
