@@ -1,3 +1,0 @@
-<input>
-agora vai sim numero de bitolado
-</input>

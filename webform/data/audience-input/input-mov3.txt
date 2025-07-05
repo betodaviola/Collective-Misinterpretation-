@@ -1,4 +1,9 @@
 <input>
-echnical terms (e.g., melody, harmony, timbre, genre, style), abstract ideas (e.g., mood, emotions, feelings), or general impressions. You will h
+ !, @, #, $, %, ^, &, *, (, ), -, _, =, +, \, |,, {, }, ;, :, /, ?,ˆ, ˜, ¨, ´, ``, ¸, ˚, ˛
+</input>
+
+<input>
+ !, @, #, $, %, ^, &, *, (, ), -, _, =, +, \, |,, {, }, ;, :, /, ?,ˆ, ˜, ¨, ´, ``, ¸, ˚, ˛
+ !, @, #, $, %, ^, &, *, (, ), -, _, =, +, \, |,, {, }, ;, :, /, ?,ˆ, ˜, ¨, ´, ``, ¸, ˚, ˛
 </input>
 

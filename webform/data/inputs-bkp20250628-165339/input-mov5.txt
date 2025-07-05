@@ -1,3 +1,0 @@
-<input>
-and maybe a third one
-</input>

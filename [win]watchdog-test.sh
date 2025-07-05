@@ -4,7 +4,7 @@
 ###IMPORTAANT EXTRA LINE TO RUN THIS ON WINDOWS 
 jq="win64-depedencies/jq-win64.exe"  # very interesting way to deal with linux packages on windows. jq for example had the binary .exe available so you can just create an alias of sort to execute it. JUST MAKE SURE TO CHANGE THE packagename TO "$packagename" on the code so its more of a variable than a package being executed
 
-url="http://localhost:8000/file-lister.php"
+url="https://colmis.robertomochetti.com/file-lister.php"
 download_dir="local-inputs"
 
 function watchdog() {
@@ -15,7 +15,7 @@ function watchdog() {
             filename=$(basename "$f")
             if [ ! -f "$download_dir/$filename" ]; then
                 echo "Downloading $filename..."
-                curl -o "$download_dir/$filename" "http://localhost:8000/data/audience-input/$filename"
+                curl -o "$download_dir/$filename" "https://colmis.robertomochetti.com/downloader.php?file=$filename"
                 found_new_file=true
                 break
             fi

@@ -1,4 +1,9 @@
 <input>
-starting with one leting it close naturall
+ !, @, #, $, %, ^, &amp;, *, (, ), -, _, =, +, \, |,, {, }, ;, :, /, ?,&circ;, &tilde;, &uml;, &acute;, ``, &cedil;, ˚, ˛
+</input>
+
+<input>
+ !, @, #, $, %, ^, &amp;, *, (, ), -, _, =, +, \, |,, {, }, ;, :, /, ?,&circ;, &tilde;, &uml;, &acute;, ``, &cedil;, ˚, ˛
+ !, @, #, $, %, ^, &amp;, *, (, ), -, _, =, +, \, |,, {, }, ;, :, /, ?,&circ;, &tilde;, &uml;, &acute;, ``, &cedil;, ˚, ˛
 </input>
 

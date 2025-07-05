@@ -1,3 +1,0 @@
-<input>
-adiciona uminha vai
-</input>

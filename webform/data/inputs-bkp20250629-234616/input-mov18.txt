@@ -1,6 +1,0 @@
-<input>
-e approximately one minute after the start of each movement to write your description before it is automatically submitted.
-
-After one minute, the form will be deactiva
-</input>
-
