@@ -1,0 +1,8 @@
+**/audio-gen-tests/
+**/fake-reviews/
+**/review-summarizaton/
+
+tk.txt
+
+*.wav
+*.mp3

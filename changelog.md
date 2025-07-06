@@ -54,6 +54,6 @@
 - Created first version of watchdog script. The requests easily overwhelm the php code and make the form pages useless. Fortunately, I think the problem is how the code is organized and php handled so I will redo everything trying to merge my html with more broken down php codes spread out through it so the requests are not all going to the same place.
 
 ## 2025/07/05 (Roberto)
-- Fixed the final bugs and deployed the [admin page] (https://colmis.robertomochetti.com/admin/) and the [audience form page] (https://colmis.robertomochetti.com/).
+- Fixed the final bugs and deployed the [admin page](https://colmis.robertomochetti.com/admin/) and the [audience form page](https://colmis.robertomochetti.com/).
 - Finished testing bot script using Playwrite (bot-army.py). Stil might need some work later but it was useful enough for now.
 - Started to work on the final main script, collectiveMisinterpretation.sh. Already have the warmup and opening routine ready, as well as integration with the online pages and automatic download and summarization capabilities for the audience inputs.

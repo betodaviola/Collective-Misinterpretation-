@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#Dependencies: jq, ollama
+#Dependencies: jq, ollama, stable-audio-tools
 
 download_dir="local-inputs"
 MODEL="mistral:7b"
@@ -19,7 +19,7 @@ function setup() {
                     echo "$download_dir is empty. Proceeding."
 
                 else
-                    rm $download_dir/* summaries/*
+                    rm $download_dir/* summaries/* movements/*
                     echo "The contends of $download_dir/  and summaries/ have been deleted. Proceeding."
                     ##ADD THE OPTION TO CLEAN OTHER FOLDERS RELATED TO THE AI PARTS OF THE PROCESS LATER
                 fi
@@ -30,14 +30,7 @@ function setup() {
         esac
     done
 
-
-    echo "Please wait while we warmup the Ollama engine."
-    start_warmup=$(date +%s)
-    ollama run mistral:7b --hidethinking "Warmup!" > /dev/null 2>&1
-    end_warmup=$(date +%s)
-    warmup_dur=$((end_warmup - start_warmup))
-    echo "Warmup time: ${warmup_dur} seconds."
-#    sleep(0.5)
+    sleep 0.5
     echo "If you already reset the form through the admin page, the performance can start."
 }
 
@@ -69,22 +62,35 @@ function watchdog() {
                 Here is the database:
                 $REVIEWS"
 
+                export OLLAMA_HOST=0.0.0.0:11434
+                export OLLAMA_CONTEXT_LENGTH=16384
+                export OLLAMA_MODELS=/mnt/storage/ollamaModels
 
+                ollama serve > /dev/null 2>&1 &
+                sleep 1
                 ollama run $MODEL --hidethinking "$PROMPT" >> "$output"
 
                 sum_end=$(date +%s)
                 sum_dur=$((sum_end - sum_start))
-
                 echo "Done. $input_n reviews were summarized in ${sum_dur}s, and saved to $output."
 
+                killall ollama #Need to make sure EVERYTHING in the gpu is available
+
+                #starting generative proccess for the next movement
+                gen_start=$(date +%s)
+                
+                source ~/stable-audio-tools/.venv/bin/activate #needs an outdated version of python to run
+                huggingface-cli login --token "$(cat tk.txt)" #you also need to login into the hugginface account
+                PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python audio-gen.py "$output"
+                deactivate #gets out from outdated python environment
+
+                gen_end=$(date +%s)
+                gen_dur=$((gen_end - gen_start))
+                gen_total=$((gen_end - sum_start))
+                echo "Done. New movement was created in ${sum_dur}s. ${gen_total}s after audience input was download."
 
 
-
-
-
-
-
-
+                ############WORK ON AUTOPLAY THROUGH THE RIGHT INTERFACE###############
                 break
             fi
         done
