@@ -1,4 +1,5 @@
 # Run with: PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python audio-gen.py
+#Still need to adjust number of steps accordingly
 
 import torch
 import torchaudio
@@ -82,3 +83,6 @@ output = output.clamp(-1, 1).mul(32767).to(torch.int16)
 
 # Save to file
 torchaudio.save(f"movements/{output_filename}", output, sample_rate)
+
+#output path to use on bash script
+print(f"movements/{output_filename}", flush=True)

@@ -32,6 +32,18 @@ function setup() {
 
     sleep 0.5
     echo "If you already reset the form through the admin page, the performance can start."
+    read -p "Press enter to play the first movement."
+    echo "Playing..."
+    pw-play audio-mov1.wav
+
+    export OLLAMA_HOST=0.0.0.0:11434
+    export OLLAMA_CONTEXT_LENGTH=16384
+    export OLLAMA_MODELS=/mnt/storage/ollamaModels
+    ollama serve > /dev/null 2>&1 &
+    sleep 0.5
+    ollama run $MODEL --hidethinking "say hi" > /dev/null 2>&1 & #warmup ollama as the movement plays for the first time
+
+    pw-play audio-mov1.wav & #play again but now async while AI prepares the next movement
 }
 
 function watchdog() {
@@ -62,18 +74,13 @@ function watchdog() {
                 Here is the database:
                 $REVIEWS"
 
-                export OLLAMA_HOST=0.0.0.0:11434
-                export OLLAMA_CONTEXT_LENGTH=16384
-                export OLLAMA_MODELS=/mnt/storage/ollamaModels
-
-                ollama serve > /dev/null 2>&1 &
-                sleep 1
                 ollama run $MODEL --hidethinking "$PROMPT" >> "$output"
 
                 sum_end=$(date +%s)
                 sum_dur=$((sum_end - sum_start))
                 echo "Done. $input_n reviews were summarized in ${sum_dur}s, and saved to $output."
 
+                sleep 0.5
                 killall ollama #Need to make sure EVERYTHING in the gpu is available
 
                 #starting generative proccess for the next movement
@@ -81,13 +88,28 @@ function watchdog() {
                 
                 source ~/stable-audio-tools/.venv/bin/activate #needs an outdated version of python to run
                 huggingface-cli login --token "$(cat tk.txt)" #you also need to login into the hugginface account
-                PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python audio-gen.py "$output"
+                new_mov=$(PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python audio-gen.py "$output"| tail -n 1 | tr -d '\r\n') #tail and tr makes sure it ignores all outputs from the script except the last print() when assigning it to the variable
                 deactivate #gets out from outdated python environment
 
                 gen_end=$(date +%s)
                 gen_dur=$((gen_end - gen_start))
                 gen_total=$((gen_end - sum_start))
-                echo "Done. New movement was created in ${sum_dur}s. ${gen_total}s after audience input was download."
+                echo "Done. ${new_mov} was created in ${sum_dur}s. ${gen_total}s after audience input was download."
+                sleep 0.5
+                
+                read -p "Press enter to play the next movement."
+                echo "Playing..."
+                pw-play $new_mov
+
+                export OLLAMA_HOST=0.0.0.0:11434
+                export OLLAMA_CONTEXT_LENGTH=16384
+                export OLLAMA_MODELS=/mnt/storage/ollamaModels
+                ollama serve > /dev/null 2>&1 &
+                sleep 0.5
+                ollama run $MODEL --hidethinking "say hi" > /dev/null 2>&1 & #warmup ollama as the movement plays for the first time
+                
+                pw-play $new_mov & #play again but while AI prepares the next movement
+
 
 
                 ############WORK ON AUTOPLAY THROUGH THE RIGHT INTERFACE###############
