@@ -8,8 +8,6 @@ AUDIENCE_WKSPC="workspace 2" # home: "workspace 2" | performance hall: ADMIN_WKS
 download_dir="local-inputs"
 MODEL="mistral:7b"
 
-current_bkg=bkg-mov1.png #You need a first image already done to make it run smoothly
-
 function setup() {
     i3-msg "$AUDIENCE_WKSPC"
     cp images/qr-code.png images/current-image.png
@@ -20,7 +18,7 @@ function setup() {
     i3-msg "$ADMIN_WKSP"
     
     echo "Before proceeding, please make sure to open the admin webpage for the project and click the RESET button."
-    echo "Follow the prompts on this terminal, and wait for the message telling you that the piece can start."
+    echo "Follow the prompts on this terminal, and wait for the message after the Ollama warmup telling you that the piece can start."
     read -p "Press enter to continue"
 
     #This is a cool method for simple questions. Differently from using read -p, you don't need to sanitize it
@@ -59,7 +57,6 @@ function play() {
     ollama run $MODEL --hidethinking "say hi" > /dev/null 2>&1 & #warmup ollama as the movement plays for the first time
     pw-play $1 & #play again but now async while AI prepares the next movement
 }
-
 function watchdog() {
     lister="https://colmis.robertomochetti.com/file-lister.php"
 
@@ -78,13 +75,7 @@ function watchdog() {
                 input_n=$(grep "<input>" $download_dir/$filename | wc -l)
                 echo "Summarizing audience input from $download_dir/$filename. Total inputs to summarize: $input_n"
 
-                ( #wrapped in a subshell to be full async
-                    wordcloud_cli --text $download_dir/$filename --stopwords stop-words.txt --width 1800 --height 980 --mode RGBA --color "#ff0000" --background "#00000040" --imagefile images/cloud.png
-                    magick convert \
-                        $current_bkg -resize 1920x1080! \
-                        null: images/cloud.png -gravity center -layers composite \
-                        images/current-image.png &
-                ) &
+                wordcloud_cli --text $download_dir/$filename --stopwords stop-words.txt --width 1800 --height 980 --mode RGBA --color "#000000" --background "#00000000" --imagefile images/cloud.png &
 
                 # Delete contents of output file if it exists, or creates it if it doesn't
                 output="summaries/sum-${filename#input-}"
@@ -109,15 +100,8 @@ function watchdog() {
                 gen_start=$(date +%s)
                 
                 source ~/stable-audio-tools/.venv/bin/activate #needs an outdated version of python to run
-
-                #wrapped in a subshell to be full async
-                bkg_path_file=$(mktemp)
-                (
-                    python image-gen.py "$output" | tail -n 1 | tr -d '\r\n' > "$bkg_path_file"
-                ) &
-
- #               current_bkg=$(python image-gen.py "$output" | tail -n 1 | tr -d '\r\n') &
-                
+                current_bkg=$(python image-gen.py "$output"| tail -n 1 | tr -d '\r\n') && \
+                    magick convert $current_bkg images/cloud.png -gravity center -composite images/current-image.png &
 
                 huggingface-cli login --token "$(cat tk.txt)" #you also need to login into the hugginface account
                 new_mov=$(PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python audio-gen.py "$output"| tail -n 1 | tr -d '\r\n') #tail and tr makes sure it ignores all outputs from the script except the last print() when assigning it to the variable
@@ -133,17 +117,6 @@ function watchdog() {
 
                 word_n=$(cat "$output" | wc -w)
                 echo "OUTPUT HAS $word_n WORDS"
-
-                # Wait for background image generation to complete
-                while [[ ! -s "$bkg_path_file" ]]; do
-                    sleep 0.1
-                    echo "waiting for new bkg"
-                done
-                current_bkg=$(< "$bkg_path_file")
-                echo "NEW BKG IS: ${current_bkg}"
-
-                cp $current_bkg images/current-image.png
-
 
                 if (( word_n > 160 )); then
                     split_file1=$(mktemp)
@@ -182,27 +155,26 @@ function watchdog() {
                     # Async image generation and display in the background
                     (
                         for part in "$display_split1" "$display_split2"; do
-                            magick \
-                                \( "$current_bkg" -resize 1920x1080! \) \
-                                \( -size 1800x1000 -gravity center -background 'rgba(0,0,0,0.4)' -fill white -font Adwaita-Sans-Bold -pointsize 45 caption:"$part" \) \
-                                -gravity center -composite \
-                                images/current-image.png
+                            magick -size 1800x1000 \
+                                -gravity center \
+                                -background 'rgba(0,0,0,0.6)' \
+                                -fill white \
+                                -font Adwaita-Sans-Bold \
+                                -pointsize 45 \
+                                caption:"$part" miff:- | \
+                            magick $current_bkg - -gravity center -composite images/current-image.png
 
-                            sleep 20
+                            sleep 23
                         done
-                        cp $current_bkg images/current-image.png
 
                         rm "$split_file1" "$split_file2"
                     ) &
 
                 else
-                    echo "NOT SPLITTING"
+                                    echo "NOT SPLITTING"
                     display_prompt="\"$(cat $output)\""
-                    magick \
-                        \( "$current_bkg" -resize 1920x1080! \) \
-                        \( -size 1800x1000 -gravity center -background 'rgba(0,0,0,0.4)' -fill white -font Adwaita-Sans-Bold -pointsize 45 caption:"$display_prompt" \) \
-                        -gravity center -composite \
-                        images/current-image.png
+                    magick -size 1800x1000 -gravity center -background 'rgba(0,0,0,0.6)' -fill white -font Adwaita-Sans-Bold -pointsize 45 caption:"$display_prompt" miff:- | \
+                    magick $current_bkg - -gravity center -composite images/current-image.png
                 fi
                 
                 play $new_mov
@@ -220,8 +192,13 @@ function watchdog() {
     done
 }
 
+#################################### ADD BLOCK FOR WHEN TEXT IS TOO LONG
+
+
+
+
 setup
-play audio-mov1.wav
+play audio-mov1.wav 
 watchdog
 echo "DONE"
 

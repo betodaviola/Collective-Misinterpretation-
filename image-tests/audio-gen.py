@@ -8,6 +8,8 @@ import gc
 import sys
 import json
 import re
+import time
+from datetime import datetime
 from einops import rearrange
 from stable_audio_tools import get_pretrained_model
 from stable_audio_tools.inference.generation import generate_diffusion_cond
@@ -16,15 +18,6 @@ from stable_audio_tools.inference.generation import generate_diffusion_cond
 prompt_file = sys.argv[1]
 with open(prompt_file, "r") as f:
     prompt_text = f.read().strip()
-# Uses regex to rename the output
-base_name = os.path.splitext(os.path.basename(prompt_file))[0]
-match = re.search(r"mov(\d+)", base_name)
-if match:
-    number = int(match.group(1))
-    output_index = number + 1
-    output_filename = f"audio-mov{output_index}.wav"
-else:
-    raise ValueError(f"Could not extract number from filename: {base_name}")
 
 #clean memory cache before running
 torch.cuda.empty_cache()
@@ -52,20 +45,24 @@ with open(os.path.join(model_path, "config.json"), "w") as f:
 
 # Define prompt and duration
 conditioning = [{
+#    "prompt": "fast pace blues",
     "prompt": prompt_text,
     "seconds_start": 0,
     "seconds_total": 45
 }]
 
+start_time = time.time()
+elapsed = time.time() - start_time
+
 # Generate audio
 with torch.no_grad(), torch.cuda.amp.autocast():
     output = generate_diffusion_cond(
         model,
-        steps=150,#usually 200
-        cfg_scale=12, #For the purpose of this project higher is better. lower is a trip though. This is related to how much attention the AI gives to the prompt
+        steps=150, #usually I keep it 200. biggest time increaser in between movements
+        cfg_scale=12,
         conditioning=conditioning,
         sample_size=sample_size,
-        sigma_min=0.2,
+        sigma_min=0.2, #usually .3
         sigma_max=500,
         sampler_type="dpmpp-3m-sde",
         device=device
@@ -82,7 +79,11 @@ output = output / torch.max(torch.abs(output))
 output = output.clamp(-1, 1).mul(32767).to(torch.int16)
 
 # Save to file
-torchaudio.save(f"movements/{output_filename}", output, sample_rate)
+timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+filename = f"audio_{timestamp}.wav"
+torchaudio.save(filename, output, sample_rate)
 
 #output path to use on bash script
-print(f"movements/{output_filename}", flush=True)
+print(f"\n✅ Audio saved as: {filename}")
+print(f"🕒 Generation took {elapsed:.2f} seconds")
+
