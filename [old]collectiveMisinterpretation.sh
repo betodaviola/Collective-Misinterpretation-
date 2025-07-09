@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#Dependencies: jq, ollama, stable-audio-tools, wordcloud
+#Dependencies: jq, ollama, stable-audio-tools
 
 ###SET ACCORDING TO THE HALL
 ADMIN_WKSP="workspace 11" # home: "workspace 11" | performance hall: ADMIN_WKSP="workspace 1"
@@ -12,7 +12,7 @@ function setup() {
     i3-msg "$AUDIENCE_WKSPC"
     cp images/qr-code.png images/current-image.png
     sleep 0.4
-    pqiv --fullscreen --hide-info-box --fade --scale-images-up --watch-files=on --fade-duration=1 images/current-image.png &
+    pqiv --fullscreen --hide-info-box --fade --scale-images-up --watch-files=on --fade-duration=0.5 images/current-image.png &
     while ! xdotool search --class pqiv >/dev/null 2>&1; do sleep 0.1; done #this should wait until image opens so it does not steal focus. If does not work uncomment and maybe adjust sleep line below
     #sleep 0.4 # needs time or it will transfer the background to your current workspace
     i3-msg "$ADMIN_WKSP"
@@ -44,19 +44,22 @@ function setup() {
     sleep 0.5
     echo "If you already reset the form through the admin page, the performance can start."
     read -p "Press enter to play the first movement."
-}
-function play() {
     echo "Playing..."
-    pw-play $1
-    #warm ollama up while playing
+
+    pw-play audio-mov1.wav
+
+    cp images/word-cloud.png images/current-image.png
+
     export OLLAMA_HOST=0.0.0.0:11434
     export OLLAMA_CONTEXT_LENGTH=16384
     export OLLAMA_MODELS=/mnt/storage/ollamaModels
     ollama serve > /dev/null 2>&1 &
     sleep 0.5
     ollama run $MODEL --hidethinking "say hi" > /dev/null 2>&1 & #warmup ollama as the movement plays for the first time
-    pw-play $1 & #play again but now async while AI prepares the next movement
+
+    pw-play audio-mov1.wav & #play again but now async while AI prepares the next movement
 }
+
 function watchdog() {
     lister="https://colmis.robertomochetti.com/file-lister.php"
 
@@ -74,12 +77,6 @@ function watchdog() {
 
                 input_n=$(grep "<input>" $download_dir/$filename | wc -l)
                 echo "Summarizing audience input from $download_dir/$filename. Total inputs to summarize: $input_n"
-
-###might manage to make this async
-                wordcloud_cli --text $download_dir/$filename --stopwords stop-words.txt --width 1800 --height 980 --mode RGBA --color "#000000" --background "#00000000" --imagefile images/cloud.png 
-                magick convert images/cloud-bkg.png images/cloud.png -gravity center -composite images/current-image.png
-                #cp images/word-cloud.png images/current-image.png
-
 
                 # Delete contents of output file if it exists, or creates it if it doesn't
                 output="summaries/sum-${filename#input-}"
@@ -115,70 +112,25 @@ function watchdog() {
                 sleep 0.5
                 
                 read -p "Press enter to play the next movement."
+                magick -size 1800x1000 -background none -fill yellow -font Adwaita-Sans-Bold -pointsize 42 caption:"$(cat $output)" miff:- | \
+                magick images/prompt-bkg.png - -gravity center -composite images/current-image.png
+                echo "Playing..."
+                pw-play $new_mov
 
-                word_n=$(cat "$output" | wc -w)
-                echo "OUTPUT HAS $word_n WORDS"
+                cp images/word-cloud.png images/current-image.png
 
-                if (( word_n > 160 )); then
-                    split_file1=$(mktemp)
-                    split_file2=$(mktemp)
-                    echo "SPLITTING"
-
-                    # Count lines and words (preserving paragraphs)
-                    total_words=$(wc -w < "$output")
-                    half_words=$((total_words / 2))
-
-                    wc=0
-                    switch=0
-
-                    # Create the two split files while keeping line breaks
-                    while IFS= read -r line || [ -n "$line" ]; do
-                        for word in $line; do
-                            if (( wc >= half_words )); then
-                                switch=1
-                            fi
-
-                            if (( switch == 0 )); then
-                                printf "%s " "$word" >> "$split_file1"
-                            else
-                                printf "%s " "$word" >> "$split_file2"
-                            fi
-                            ((wc++))
-                        done
-                        # preserve paragraph line breaks
-                        echo "" >> "$split_file1"
-                        echo "" >> "$split_file2"
-                    done < "$output"
-
-                    display_split1="\"$(cat $split_file1)..."
-                    display_split2="$(cat $split_file2)\""
-
-                    # Async image generation and display in the background
-                    (
-                        for part in "$display_split1" "$display_split2"; do
-                            magick -size 1800x1000 \
-                                -gravity center \
-                                -background 'rgba(0,0,0,0.6)' \
-                                -fill white \
-                                -font Adwaita-Sans-Bold \
-                                -pointsize 45 \
-                                caption:"$part" miff:- | \
-                            magick images/prompt-bkg.png - -gravity center -composite images/current-image.png
-
-                            sleep 23
-                        done
-
-                        rm "$split_file1" "$split_file2"
-                    ) &
-
-                else
-                                    echo "NOT SPLITTING"
-                    display_prompt="\"$(cat $output)\""
-                    magick -size 1800x1000 -gravity center -background 'rgba(0,0,0,0.6)' -fill white -font Adwaita-Sans-Bold -pointsize 45 caption:"$display_prompt" miff:- | \
-                    magick images/prompt-bkg.png - -gravity center -composite images/current-image.png
-                fi
+                export OLLAMA_HOST=0.0.0.0:11434
+                export OLLAMA_CONTEXT_LENGTH=16384
+                export OLLAMA_MODELS=/mnt/storage/ollamaModels
+                ollama serve > /dev/null 2>&1 &
+                sleep 0.5
+                ollama run $MODEL --hidethinking "say hi" > /dev/null 2>&1 & #warmup ollama as the movement plays for the first time
                 
-                play $new_mov
+                pw-play $new_mov & #play again but while AI prepares the next movement
+
+
+
+                ############WORK ON AUTOPLAY THROUGH THE RIGHT INTERFACE###############
                 break
             fi
         done
@@ -193,13 +145,11 @@ function watchdog() {
     done
 }
 
-#################################### ADD BLOCK FOR WHEN TEXT IS TOO LONG
 
 
 
 
 setup
-play audio-mov1.wav 
 watchdog
 echo "DONE"
 
