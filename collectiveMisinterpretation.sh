@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#Dependencies: jq, ollama, stable-audio-tools, wordcloud
+#Dependencies: jq, ollama, stable-audio-tools, wordcloud, playwright
 
 ###SET ACCORDING TO THE HALL
 ADMIN_WKSP="workspace 11" # home: "workspace 11" | performance hall: ADMIN_WKSP="workspace 1"
@@ -38,9 +38,11 @@ function setup() {
     dim_output i3-msg "$ADMIN_WKSP"
     
     echo -e "${BOLD}Instructions:${RESET}"
-    echo -e "1. Make sure to open the admin webpage for the project and click the ${UND}RESET${RESET} button."
+    echo -e "1. Make sure to open the admin webpage for the project. Page needs to be open in a browser to be properly reset and monitored."
     echo -e "2. Backup all local data from previous performances. It is recommended to clean the folders when asked on this prompt"
     read -p "$(echo -e "${BOLD}Press enter to continue${RESET}")"
+
+    playwright install  firefox > /dev/null & #make sure theres no surprises on auto opening
 
     #This is a cool method for simple questions. Differently from using read -p, you don't need to sanitize it
     echo "Do you wanna clean the local directories? (1 or 2) Please backup important data first."
@@ -61,18 +63,24 @@ function setup() {
                 break;;
         esac
     done
+#################################UNCOMMENT
+#    python form-reseter.py #automatic reset form
 
     sleep 0.5
     echo -e "If you already ${UND}RESET${RESET} the form through the admin page, the performance can start."
     read -p "$(echo -e "${BOLD}Press enter to play the first movement.${RESET}")"
 }
 function play() {
+    python form-opener.py & #automatically opens webform
     echo "Playing..."
     pw-play $1
     #warm ollama up while playing
     export OLLAMA_HOST=0.0.0.0:11434
     export OLLAMA_CONTEXT_LENGTH=16384
     export OLLAMA_MODELS=/mnt/storage/ollamaModels
+
+#    playwright install & # EMERGENCY LINE IF BROWSERS NOT STAYING CONSISTENT
+
     ollama serve > /dev/null 2>&1 &
     while ! curl -sf http://localhost:11434/api/tags > /dev/null; do
         sleep 0.1
