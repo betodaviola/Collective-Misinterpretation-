@@ -37,9 +37,7 @@ function setup() {
     sleep 0.4 # still needs time or it will transfer the background to your current workspace
     dim_output i3-msg "$ADMIN_WKSP"
     
-    echo -e "${BOLD}Instructions:${RESET}"
-    echo -e "1. Make sure to open the admin webpage for the project. Page needs to be open in a browser to be properly reset and monitored."
-    echo -e "2. Backup all local data from previous performances. It is recommended to clean the folders when asked on this prompt"
+    echo -e "Backup all local data from previous performances. For a successfull performance, select YES when asked about cleaning the local and online directories"
     read -p "$(echo -e "${BOLD}Press enter to continue${RESET}")"
 
     playwright install  firefox > /dev/null & #make sure theres no surprises on auto opening
@@ -54,7 +52,7 @@ function setup() {
 
                 else
                     dim_output rm $download_dir/* summaries/* movements/* images/*
-                    echo "The contents of $download_dir/  and summaries/ have been deleted. Proceeding."
+                    echo "The contents created on previous runs of the piece have been deleted. Proceeding."
                     ##ADD THE OPTION TO CLEAN OTHER FOLDERS RELATED TO THE AI PARTS OF THE PROCESS LATER
                 fi
                 break;;
@@ -63,15 +61,26 @@ function setup() {
                 break;;
         esac
     done
-#################################UNCOMMENT
-#    python form-reseter.py #automatic reset form
+    echo "Do you wanna reset the online directories before starting the piece? (1 or 2). A copy will be available at your online hosting service."
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) 
+                curl -X POST -d "btnStatus=reset" https://colmis.robertomochetti.com/admin/form-handler.php
+                curl -X POST -d "" https://colmis.robertomochetti.com/admin/input-backup.php
+                echo "Online directories reset."
+                break;;
+            No ) 
+                echo -e "${BOLD}${RED}WARNING:${RESET}${BOLD} The piece will NOT run properly if online directories are not clean. If this is not a test, please restart this script, and choose to reset online directories.${RESET}"
+                break;;
+        esac
+    done
 
     sleep 0.5
     echo -e "If you already ${UND}RESET${RESET} the form through the admin page, the performance can start."
     read -p "$(echo -e "${BOLD}Press enter to play the first movement.${RESET}")"
 }
 function play() {
-    python form-opener.py & #automatically opens webform
+    curl -X POST -d "btnStatus=open" https://colmis.robertomochetti.com/admin/form-handler.php & #automatically opens webform
     echo "Playing..."
     pw-play $1
     #warm ollama up while playing
@@ -87,6 +96,9 @@ function play() {
         echo "Waking Ollama up..."
     done
     ollama run $MODEL --hidethinking "say hi" > /dev/null 2>&1 & #warmup ollama as the movement plays for the first time
+    
+    curl -X POST -d "btnStatus=reset" https://colmis.robertomochetti.com/admin/form-handler.php & #automatically closes webform
+
     pw-play $1 & #play again but now async while AI prepares the next movement
 }
 
