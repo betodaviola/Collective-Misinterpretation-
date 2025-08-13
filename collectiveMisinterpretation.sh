@@ -8,7 +8,7 @@ AUDIENCE_WKSPC="workspace 2" # home: "workspace 2" | performance hall: ADMIN_WKS
 download_dir="local-inputs"
 MODEL="mistral:7b"
 
-current_bkg=bkg-mov1.png #You need a first image already done to make it run smoothly
+current_bkg=initial-assets/bkg-mov1.png #You need a first image already done to make it run smoothly
 
 
 # Define some colors
@@ -30,7 +30,7 @@ function dim_output() {
 
 function setup() {
     dim_output i3-msg "$AUDIENCE_WKSPC"
-    cp qr-code.png images/current-image.png
+    cp initial-assets/qr-code.png images/current-image.png
     sleep 0.4
     pqiv --fullscreen --hide-info-box --fade --scale-images-up --watch-files=on --fade-duration=1 images/current-image.png &
     while ! xdotool search --class pqiv >/dev/null 2>&1; do sleep 0.1; done #this should wait until image opens so it does not steal focus. If does not work uncomment and maybe adjust sleep line below
@@ -109,7 +109,7 @@ function watchdog() {
                 echo -e "${UND}Summarizing${RESET} audience input from $download_dir/$filename. Total inputs to summarize: ${UND}$input_n${RESET}"
 
                 ( #wrapped in a subshell to be full async
-                    dim_output wordcloud_cli --text $download_dir/$filename --stopwords stop-words.txt --width 1800 --height 980 --mode RGBA --color "#ff0000" --background "#00000040" --imagefile images/cloud.png
+                    dim_output wordcloud_cli --text $download_dir/$filename --stopwords initial-assets/stop-words.txt --width 1800 --height 980 --mode RGBA --color "#ff0000" --background "#00000040" --imagefile images/cloud.png
                     dim_output magick convert \
                         $current_bkg -resize 1920x1080! \
                         null: images/cloud.png -gravity center -layers composite \
@@ -121,7 +121,7 @@ function watchdog() {
                 : > "$output" 
 
                 REVIEWS=$(cat "$download_dir/$filename")
-                PROMPT_SUM=$(cat "summary-prompt.txt")
+                PROMPT_SUM=$(cat "initial-assets/summary-prompt.txt")
                 PROMPT="$PROMPT_SUM
                 Here is the database:
                 $REVIEWS"
@@ -259,5 +259,5 @@ function watchdog() {
 }
 
 setup
-play audio-mov1.wav
+play initial-assets/audio-mov1.wav
 watchdog

@@ -1,4 +1,0 @@
-Write a summary of the database while following these rules:
-1- Keep it short (2 to 3 short paragraphs).
-2- DO NOT reveal directly or indirectly that it is a summarization. Rather pretend that you wrote the text while experiencing the performance mentioned in the database yourself.
-3- DO NOT use headers, bullet points, or lists for structure your text. The tone and structure should be conversational and informal.
