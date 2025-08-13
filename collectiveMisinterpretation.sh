@@ -65,8 +65,8 @@ function setup() {
     select yn in "Yes" "No"; do
         case $yn in
             Yes ) 
-                curl -X POST -d "btnStatus=reset" https://colmis.robertomochetti.com/admin/form-handler.php
-                curl -X POST -d "" https://colmis.robertomochetti.com/admin/input-backup.php
+                curl -w "\n" -X POST -d "btnStatus=reset" https://colmis.robertomochetti.com/admin/form-handler.php
+                curl -w "\n" -X POST -d "" https://colmis.robertomochetti.com/admin/input-backup.php
                 echo "Online directories reset."
                 break;;
             No ) 
@@ -76,19 +76,36 @@ function setup() {
     done
 
     sleep 0.5
-    echo -e "If you already ${UND}RESET${RESET} the form through the admin page, the performance can start."
     read -p "$(echo -e "${BOLD}Press enter to play the first movement.${RESET}")"
+
+    curl -w "\n" -X POST -d "btnStatus=open" https://colmis.robertomochetti.com/admin/form-handler.php & #automatically opens webform
+    echo "Playing first movement..."
+    pw-play initial-assets/audio-mov1.wav &
+
+    export OLLAMA_HOST=0.0.0.0:11434
+    export OLLAMA_CONTEXT_LENGTH=16384
+    export OLLAMA_MODELS=/mnt/storage/ollamaModels
+
+    ollama serve > /dev/null 2>&1 &
+    while ! curl -sf http://localhost:11434/api/tags > /dev/null; do
+        sleep 0.1
+        echo "Waking Ollama up..."
+    done
+    ollama run $MODEL --hidethinking "say hi" > /dev/null 2>&1 & #warmup ollama as the movement plays for the first time
+
+    sleep 40
+
+    curl -w "\n" -X POST -d "btnStatus=closed" https://colmis.robertomochetti.com/admin/form-handler.php & #automatically closes webform
+    curl -w "\n" -X POST -d "" https://colmis.robertomochetti.com/admin/merger.php
 }
 function play() {
-    curl -X POST -d "btnStatus=open" https://colmis.robertomochetti.com/admin/form-handler.php & #automatically opens webform
+    curl -w "\n" -X POST -d "btnStatus=open" https://colmis.robertomochetti.com/admin/form-handler.php & #automatically opens webform
     echo "Playing..."
     pw-play $1
     #warm ollama up while playing
     export OLLAMA_HOST=0.0.0.0:11434
     export OLLAMA_CONTEXT_LENGTH=16384
     export OLLAMA_MODELS=/mnt/storage/ollamaModels
-
-#    playwright install & # EMERGENCY LINE IF BROWSERS NOT STAYING CONSISTENT
 
     ollama serve > /dev/null 2>&1 &
     while ! curl -sf http://localhost:11434/api/tags > /dev/null; do
@@ -97,7 +114,8 @@ function play() {
     done
     ollama run $MODEL --hidethinking "say hi" > /dev/null 2>&1 & #warmup ollama as the movement plays for the first time
     
-    curl -X POST -d "btnStatus=reset" https://colmis.robertomochetti.com/admin/form-handler.php & #automatically closes webform
+    curl -w "\n" -X POST -d "btnStatus=closed" https://colmis.robertomochetti.com/admin/form-handler.php & #automatically closes webform
+    curl -w "\n" -X POST -d "" https://colmis.robertomochetti.com/admin/merger.php
 
     pw-play $1 & #play again but now async while AI prepares the next movement
 }
@@ -271,5 +289,5 @@ function watchdog() {
 }
 
 setup
-play initial-assets/audio-mov1.wav
+# play initial-assets/audio-mov1.wav
 watchdog
