@@ -15,7 +15,7 @@
     <h1>Collective Misinterpretation</h1>
       <p>Describe the musical sounds you hear on each movement in the form below.</p>
       <p>You can use technical terms (e.g., melody, harmony, timbre, genre, style), abstract ideas (e.g., mood, emotions, feelings), or general impressions. </p>
-      <p>You'll have approximately 40 seconds to write your description, after which the form will be deactivated and you will have the chance to listen to the movement a second time. The form reactivates for each new movement, and your answer is submitted automatically.</p>
+      <p>You'll have approximately 50 seconds to write your description, after which the form will be deactivated and you will have the chance to listen to the movement a second time. The form reactivates for each new movement, and your answer is submitted automatically.</p>
       <p>You have <u><span id="counter">0</span> seconds</u> until automatic submission.</p>
       
       <!-- handle audience live descriptions-->
@@ -56,7 +56,7 @@
 
           if (status.startsWith('open')) {
             enableForm();
-          } else if (status.startsWith('closed')) {
+          } else if (status.startsWith('closed') && formEnabled) {
             await disableForm();
           }
         } catch (error) {
@@ -96,37 +96,52 @@
         movementInput.disabled = false; //actually activates the form
       }
 
-      async function disableForm() { //async. notice await in the try/catch blkock below
-        formEnabled = false;
-        if (!movementInput.value.trim()) { //trim removes spaces at begining and end. If theres no actyual input, it will return empty and and thenrun this block
-          // If there is mo input to send, just reset. Dont send empty form input to the file
+      // --- Use this corrected version of disableForm ---
+
+      function disableForm() {
+          // 1. Immediately set the state.
+          formEnabled = false;
+
+          // 2. If the input is empty, just disable and exit.
+          if (!movementInput.value.trim()) {
+              console.log("Form is empty, not submitting.");
+              movementInput.disabled = true; // Still disable it
+              countdownDisplay.textContent = '0';
+              if (interval) {
+                  clearInterval(interval);
+                  interval = null;
+              }
+              return;
+          }
+
+          // 3. CAPTURE THE DATA FIRST! (While the input is still enabled)
+          const formData = new FormData(movementForm);
+
+          // 4. NOW, disable the form and update the UI for the user.
           movementInput.disabled = true;
           countdownDisplay.textContent = '0';
           if (interval) {
-            clearInterval(interval);
-            interval = null;
+              clearInterval(interval);
+              interval = null;
           }
-          return;
-        }
-        // Now, this will; run if form is not empty when it deactivates:
-        const formData = new FormData(movementForm); // grabs the information on the form (movementForm is the id)
-        try {
-          const response = await fetch('submit.php', { //this block sends the data in the form to the php server 
-            method: "POST",
-            body: formData,
-          });
-          const data = await response.text(); //REMEMBER THAT fetch() AWAYS RETURNS A RESPONSE
-          console.log(data);
-        } catch (error) {
-          console.error(error);
-        } finally { //this aways runs at the end regardles of results and errors in the try/catch
-          movementInput.disabled = true; //deactivates form
-          countdownDisplay.textContent = '0';
-          if (interval) {
-            clearInterval(interval);
-            interval = null;
-          }
-        }
+          
+          const randomDelay = Math.random() * 3000;
+          console.log(`Submission scheduled in ${Math.round(randomDelay)} ms.`);
+
+          // 5. Schedule the submission using the data you already captured.
+          setTimeout(() => {
+              fetch('submit.php', {
+                      method: "POST",
+                      body: formData,
+                  })
+                  .then(response => response.text())
+                  .then(data => {
+                      console.log("Submission successful:", data);
+                  })
+                  .catch(error => {
+                      console.error("Submission failed:", error);
+                  });
+          }, randomDelay);
       }
 
       setInterval(checkFormStatus, 2000); //poll every 2 seconds

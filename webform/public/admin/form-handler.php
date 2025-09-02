@@ -9,7 +9,7 @@
     if ($btnStatus == "open") {
       if ($matches[1] !== "open") { // only run this block number if it was closed before
         // sets target time for forms to close
-        $target_time = time() + 60;
+        $target_time = time() + 47;
         file_put_contents(__DIR__ . '/../../data/targetTime.txt', $target_time);
         //edits the formStatus file
         $mov++;

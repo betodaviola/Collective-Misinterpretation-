@@ -1,5 +1,5 @@
 <?php
-sleep(5); // Buffer time after form closes
+sleep(8); // Buffer time after form closes
 
 // Fetch movement number
 $contents = file_get_contents(__DIR__ . '/../../data/formStatus.txt');

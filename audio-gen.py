@@ -61,7 +61,7 @@ conditioning = [{
 with torch.no_grad(), torch.cuda.amp.autocast():
     output = generate_diffusion_cond(
         model,
-        steps=150,#usually 200
+        steps=200,#usually 200
         cfg_scale=12, #For the purpose of this project higher is better. lower is a trip though. This is related to how much attention the AI gives to the prompt
         conditioning=conditioning,
         sample_size=sample_size,
