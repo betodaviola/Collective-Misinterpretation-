@@ -16,6 +16,12 @@ from stable_audio_tools.inference.generation import generate_diffusion_cond
 prompt_file = sys.argv[1]
 with open(prompt_file, "r") as f:
     prompt_text = f.read().strip()
+
+# Debug: save the prompt being used
+with open("debug-last-prompt.txt", "w") as dbg:
+    dbg.write(prompt_text)
+
+
 # Uses regex to rename the output
 base_name = os.path.splitext(os.path.basename(prompt_file))[0]
 match = re.search(r"mov(\d+)", base_name)

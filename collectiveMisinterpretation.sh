@@ -190,14 +190,27 @@ function process_file() {
         python image-gen.py "$output" | tail -n 1 | tr -d '\r\n' > "$bkg_path_file"
     ) < /dev/null &
 
+    # Adds random words list
+    vls_file="var-lists/v-ls-${filename#input-}"
+    merged_prompt="var-lists/temp-prompt-${filename#input-}"
+    {
+        # print v-ls content in one line followed by a space (no newline)
+        tr -d '\n' < "$vls_file"
+        echo -n " "  # add a space
+        cat "$output"
+    } > "$merged_prompt"
+
     dim_output huggingface-cli login --token "$(cat tk.txt)" #you also need to login into the hugginface account
-    new_mov=$(PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python audio-gen.py "$output"| tail -n 1 | tr -d '\r\n') #tail and tr makes sure it ignores all outputs from the script except the last print() when assigning it to the variable
+    new_mov=$(PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True python audio-gen.py "$merged_prompt"| tail -n 1 | tr -d '\r\n') #tail and tr makes sure it ignores all outputs from the script except the last print() when assigning it to the variable
     deactivate #gets out from outdated python environment
 
     gen_end=$(date +%s)
     gen_dur=$((gen_end - gen_start))
     gen_total=$((gen_end - sum_start))
     echo -e "Done. ${new_mov} was created in ${UND}${sum_dur}s${RESET}. ${UND}${gen_total}s${RESET} after audience input was downloaded."
+
+    rm "$merged_prompt"
+
     sleep 0.5
     
     next_bkg_path=$(cat "$bkg_path_file") # <-- IMPORTANT: Read the path from the file
@@ -314,11 +327,11 @@ function play() {
 
 function watchdog() {
     lister="https://colmis.robertomochetti.com/file-lister.php"
-    fallback_dir="emergency-stash"
+    fallback_dir="emergency-stash/emdm-run"
     download_dir="local-inputs" # Make sure this is defined
     
     # Timeout in seconds
-    readonly TIMEOUT_SECONDS=15
+    readonly TIMEOUT_SECONDS=20
     
     # Initialize timestamp
     last_file_time=$(date +%s)

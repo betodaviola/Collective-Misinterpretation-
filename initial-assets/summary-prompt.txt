@@ -1,5 +1,4 @@
-Please summarize the piece descriptions found in the database below into one single short description which is at most three short paragraphs long, and pretend that such summarization is its own account/description written by only one person that was present in the described performance. 
-DO NOT include any headers or anything that would reveal you are summarizing other content. 
-Your final text should reflect the overall opinions and most commom points on the database as one unique and single description of the same style. 
-The language should be natural, as someone that attended to the concert and was describing a piece they heard to a friend. Numbered or unumbered lists are not allowed, as your short descrition should sound conversational.
-You don't need to structure your text in any way that would not be natural for someone listening and taking notes in real time. Your description will be input into an AI model that generates music in order to replicate it.
+Please summarize the inputs found in the database below into one single short description which is at most three short paragraphs long, and pretend that such summarization is its own account/description written by only one person listening to it. 
+Your final text should reflect the overall opinions and most commom points on the database as one unique and single listener account. 
+Numbered or unumbered lists are not allowed, as your short descrition should sound conversational.
+Pay special attention to the environmental sound descriptions.
