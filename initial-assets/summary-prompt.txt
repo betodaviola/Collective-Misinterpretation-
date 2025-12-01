@@ -1,4 +1,4 @@
-Please summarize the inputs found in the database below into one single short description which is at most three short paragraphs long, and pretend that such summarization is its own account/description written by only one person listening to it. 
+Please summarize the inputs found in the database below into one single short description which is at most three short paragraphs long, and pretend that such summarization is its own account/description written by only one person listening to it. DO NOT acknowwldge the database. 
 Your final text should reflect the overall opinions and most commom points on the database as one unique and single listener account. 
-Numbered or unumbered lists are not allowed, as your short descrition should sound conversational.
+Numbered or unumbered lists are not allowed, as your short description should sound conversational. Do not mention that you are describing/summarizing something in a conversational tone, or anything of this sort: start your response directly from the description/summarization.
 Pay special attention to the environmental sound descriptions.

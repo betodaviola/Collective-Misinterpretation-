@@ -190,7 +190,7 @@ function process_file() {
         python image-gen.py "$output" | tail -n 1 | tr -d '\r\n' > "$bkg_path_file"
     ) < /dev/null &
 
-    # Adds random words list
+    # Adds random words list IF AUDIENCE IS SMALLER THAN 10-15 PEOPLE
     vls_file="var-lists/v-ls-${filename#input-}"
     merged_prompt="var-lists/temp-prompt-${filename#input-}"
     {
@@ -327,7 +327,7 @@ function play() {
 
 function watchdog() {
     lister="https://colmis.robertomochetti.com/file-lister.php"
-    fallback_dir="emergency-stash/emdm-run"
+    fallback_dir="emergency-stash"
     download_dir="local-inputs" # Make sure this is defined
     
     # Timeout in seconds

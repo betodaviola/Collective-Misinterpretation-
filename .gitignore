@@ -3,4 +3,9 @@ testground/
 inputs-bkp*
 input-mov*
 
+aimc_data/
+ubimus_data/
+zoom_data/
+emdm_data/
+
 tk.txt
